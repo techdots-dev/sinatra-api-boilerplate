@@ -2,6 +2,7 @@ require_relative "../lib/middleware/basic_auth"
 
 class Base < Sinatra::Base
   configure do
+    enable :sessions
     set :show_exceptions, false
     set :logging, true
     use Rack::Protection

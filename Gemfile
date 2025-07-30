@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gem "sinatra", require: "sinatra/base"
 gem "sequel"
 gem "pg"
-gem "rack", require: "rack"
+gem "rack", "~> 2.2", require: "rack"
 gem "rack-protection"
 gem "rack-accept"
 gem "dotenv"
@@ -14,10 +14,14 @@ gem "json"
 gem "rackup"
 gem "puma"
 
+# Background job processing
+gem "que"
+gem "mail"
+gem "ostruct"
+
 # added to the Gemfile
 group :development, :test do
   gem 'awesome_print'
-#   gem 'racksh'
-#   gem 'debugger'
   gem 'pry'
+  gem 'minitest'
 end

@@ -6,4 +6,9 @@ class User < Sequel::Model
     validates_presence [:name, :email]
     validates_unique :email
   end
+
+  def after_create
+    super
+    SendWelcomeEmailJob.enqueue(id)
+  end
 end

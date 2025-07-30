@@ -1,64 +1,74 @@
-# Rakefile
-require "sequel"
-require "dotenv"
-require "yaml"
-require "fileutils"
-require "uri"
-require "sequel/extensions/migration"
+# frozen_string_literal: true
 
-ENV["RACK_ENV"] ||= "development"
-Dotenv.load(".env.#{ENV["RACK_ENV"]}") if File.exist?(".env.#{ENV["RACK_ENV"]}")
+require 'sequel'
+require 'dotenv'
+require 'yaml'
+require 'fileutils'
+require 'uri'
+require 'sequel/extensions/migration'
+
+ENV['RACK_ENV'] ||= 'development'
+Dotenv.load(".env.#{ENV['RACK_ENV']}") if File.exist?(".env.#{ENV['RACK_ENV']}")
 
 namespace :db do
-  task :connect do
-    @db = Sequel.connect(ENV["DATABASE_URL"])
+  def db_url
+    ENV['DATABASE_URL'] || raise('DATABASE_URL not set')
   end
 
-  desc "Create the database if it doesn't exist"
-  task :create do
-    raise "DATABASE_URL not set" unless ENV["DATABASE_URL"]
+  def db_name_from_url(url)
+    URI.parse(url).path[1..]
+  end
 
-    uri = URI.parse(ENV["DATABASE_URL"])
-    db_name = uri.path[1..] # remove leading slash
+  def bootstrap_url(url)
+    uri = URI.parse(url)
     user = uri.user
     password = uri.password
     host = uri.host
     port = uri.port || 5432
+    "postgres://#{user}:#{password}@#{host}:#{port}/postgres"
+  end
 
-    # Connect to the default 'postgres' DB
-    bootstrap_url = "postgres://#{user}:#{password}@#{host}:#{port}/postgres"
-    bootstrap_db = Sequel.connect(bootstrap_url)
+  task :connect do
+    @db = Sequel.connect(db_url)
+  end
 
-    unless bootstrap_db.fetch("SELECT 1 FROM pg_database WHERE datname = ?", db_name).any?
-      bootstrap_db.run("CREATE DATABASE \"#{db_name}\"")
-      puts "✅ Created database #{db_name}"
-    else
+  desc 'Create the database if it does not exist'
+  task :create do
+    url = db_url
+    db_name = db_name_from_url(url)
+    b_url = bootstrap_url(url)
+    bootstrap_db = Sequel.connect(b_url)
+
+    if bootstrap_db.fetch('SELECT 1 FROM pg_database WHERE datname = ?', db_name).any?
       puts "⚠️  Database #{db_name} already exists"
+    else
+      bootstrap_db.run(%(CREATE DATABASE "#{db_name}"))
+      puts "✅ Created database #{db_name}"
     end
   end
 
-  desc "Run migrations"
+  desc 'Run migrations'
   task migrate: :connect do
-    migration_dir = "db/migrate"
-    unless Dir.exist?(migration_dir) && Dir.glob("#{migration_dir}/*.rb").any?
+    migration_dir = 'db/migrate'
+    unless Dir.exist?(migration_dir) && Dir.glob("{migration_dir}/*.rb").any?
       puts "⚠️  No migration files found in #{migration_dir}. Skipping."
       next
     end
 
     begin
       Sequel::Migrator.run(@db, migration_dir)
-      puts "✅ Migrations applied."
+      puts '✅ Migrations applied.'
     rescue Sequel::Migrator::Error => e
-      puts "❌ Migration error: #{e.message}"
-      puts "   Tip: You might have an orphaned migration in the DB."
+      warn "❌ Migration error: #{e.message}"
+      warn '   Tip: You might have an orphaned migration in the DB.'
       exit 1
     end
   end
 
-  desc "Create migration"
+  desc 'Create migration'
   task :create_migration, [:name] => :connect do |_, args|
-    timestamp = Time.now.strftime("%Y%m%d%H%M%S")
-    name = args[:name] || "new_migration"
+    timestamp = Time.now.strftime('%Y%m%d%H%M%S')
+    name = args[:name] || 'new_migration'
     file = "db/migrate/#{timestamp}_#{name}.rb"
     File.write(file, <<~RUBY)
       Sequel.migration do
@@ -77,21 +87,30 @@ namespace :db do
     puts "✅ Created migration: #{file}"
   end
 
-  desc "Open an interactive console with app context"
+
+  desc 'Open an interactive console with app context'
   task :console do
-    require "irb"
-    require_relative "./config/environment"
+    require 'irb'
+    require_relative './config/environment'
 
     puts "🔧 Loading Sinatra console (#{ENV['RACK_ENV']})..."
     IRB.setup(nil)
     workspace = IRB::WorkSpace.new(binding)
     irb = IRB::Irb.new(workspace)
     IRB.conf[:MAIN_CONTEXT] = irb.context
-    trap("SIGINT") { irb.signal_handle }
+    trap('SIGINT') { irb.signal_handle }
     irb.eval_input
   end
 
 
-  desc "Setup: create, migrate"
-  task setup: [:create, :migrate]
+  desc "Run Que's migration to create que_jobs table"
+  task :que_migrate do
+    require_relative './config/environment'
+    require 'que'
+    Que.migrate!(version: 6)
+    puts '✅ Que migration complete.'
+  end
+
+  desc 'Setup: create, migrate'
+  task setup: %i[create migrate]
 end
