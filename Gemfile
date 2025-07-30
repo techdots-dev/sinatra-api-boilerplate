@@ -13,8 +13,6 @@ gem 'foreman'
 gem "json"
 gem "rackup"
 gem "puma"
-
-# Background job processing
 gem "que"
 gem "mail"
 gem "ostruct"
