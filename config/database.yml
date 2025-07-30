@@ -1,0 +1,16 @@
+development:
+  adapter: postgres
+  database: sinatri_development
+  host: localhost
+
+test:
+  adapter: postgres
+  database: sinatri_test
+  host: localhost
+
+production:
+  adapter: postgres
+  database: sinatri_prod
+  host: prod-db-host
+  user: dbuser
+  password: dbpass
