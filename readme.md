@@ -34,7 +34,7 @@ A modern, modular Sinatra API boilerplate with Sequel ORM, PostgreSQL, and best 
    - Edit `config/database.yml` for your local DB settings.
 4. **Setup the database:**
    ```sh
-   bundle exec rake db:create db:migrate db:seed
+   bundle exec rake db:create db:migrate
    ```
 5. **Start the app:**
    ```sh
@@ -59,7 +59,6 @@ config/
   database.yml          # DB config per environment
 db/
   migrate/              # Sequel migrations
-  seeds/                # Seed scripts
 lib/
   middleware/
     basic_auth.rb       # Basic Auth middleware
