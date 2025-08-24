@@ -5,6 +5,7 @@ require "dotenv/load"
 require "./models/user"
 
 DB = Sequel.connect(ENV["DATABASE_URL"])
+Dir[File.join(__dir__, 'app/**/*.rb')].sort.each { |file| require file }
 
 before do
   protected_routes = ["/api"]
@@ -28,13 +29,4 @@ helpers do
       @auth.credentials &&
       @auth.credentials == [ENV["BASIC_AUTH_USER"], ENV["BASIC_AUTH_PASSWORD"]]
   end
-end
-
-get "/" do
-  "Sinatra API is running."
-end
-
-get "/api/users" do
-  content_type :json
-  User.all.to_a.to_json
 end
