@@ -1,6 +1,4 @@
 require_relative "./config/environment"
-require_relative "./app/controllers/users_controller"
-require_relative "./app/controllers/home_controller"
 
 use Rack::Cors do
   allow do
@@ -11,6 +9,10 @@ end
 
 map '/' do
   run HomeController
+end
+
+map '/health' do
+  run HealthController
 end
 
 map '/api' do

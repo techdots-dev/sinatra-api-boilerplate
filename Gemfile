@@ -35,4 +35,5 @@ group :development, :test do
   gem 'awesome_print'
   gem 'pry'
   gem 'minitest'
+  gem 'rack-test'
 end
