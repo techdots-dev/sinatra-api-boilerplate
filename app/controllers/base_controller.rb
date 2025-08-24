@@ -1,6 +1,6 @@
-require_relative "../lib/middleware/basic_auth"
+require_relative "../../lib/middleware/basic_auth"
 
-class Base < Sinatra::Base
+class BaseController < Sinatra::Base
   configure do
     enable :sessions
     set :show_exceptions, false
@@ -11,8 +11,12 @@ class Base < Sinatra::Base
   end
 
   before do
-    content_type :json
-    halt 406 unless request.accept.any? { |a| a.to_s == "application/json" }
+    if request.path_info == "/"
+      content_type :html
+    else
+      content_type :json
+      halt 406 unless request.accept.any? { |a| a.to_s == "application/json" }
+    end
   end
 
   error Sequel::NoMatchingRow do
