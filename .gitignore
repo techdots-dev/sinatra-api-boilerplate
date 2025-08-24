@@ -1,0 +1,59 @@
+# Ruby
+*.gem
+*.rbc
+.bundle
+.config
+.yardoc
+_yardoc
+coverage/
+doc/
+rdoc/
+
+# Rails/Sinatra
+log/
+tmp/
+
+# Byebug
+.byebug_history
+
+# dotenv
+.env*
+.env
+
+# PostgreSQL
+*.psql
+*.pg
+*.pgsql
+*.pgdata
+*.dump
+*.backup
+*.log
+pgdata/
+db/*.psql
+db/*.pg
+db/*.pgsql
+db/*.dump
+db/*.backup
+
+# System
+.DS_Store
+*.swp
+*.swo
+
+# VSCode
+.vscode/
+
+# Test
+coverage/
+
+# Node
+node_modules/
+
+# Git
+*.orig
+
+# Ignore secrets
+config/secrets.yml
+
+# Ignore CI
+.github/

@@ -1,8 +1,8 @@
-require_relative '../test_helper'
 require 'mail'
 
 class SendWelcomeEmailJobTest < Minitest::Test
   def setup
+    User.dataset.delete
     Mail::TestMailer.deliveries.clear
     Mail.defaults do
       delivery_method :test

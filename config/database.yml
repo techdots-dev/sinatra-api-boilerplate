@@ -1,16 +1,23 @@
 development:
+  url: <%= ENV['DATABASE_URL'] %>
   adapter: postgres
-  database: sinatri_development
+  database: sinatra_development
   host: localhost
+  user: postgres
+  password: postgres
 
 test:
+  url: <%= ENV['DATABASE_URL'] %>
   adapter: postgres
-  database: sinatri_test
+  database: sinatra_test
   host: localhost
+  user: postgres
+  password: postgres
 
 production:
+  url: <%= ENV['DATABASE_URL'] %>
   adapter: postgres
-  database: sinatri_prod
+  database: sinatra_prod
   host: prod-db-host
-  user: dbuser
-  password: dbpass
+  user: postgres
+  password: postgres

@@ -50,7 +50,7 @@ namespace :db do
   desc 'Run migrations'
   task migrate: :connect do
     migration_dir = 'db/migrate'
-    unless Dir.exist?(migration_dir) && Dir.glob("{migration_dir}/*.rb").any?
+    unless Dir.exist?(migration_dir) && Dir.glob("#{migration_dir}/*.rb").any?
       puts "⚠️  No migration files found in #{migration_dir}. Skipping."
       next
     end
@@ -87,7 +87,6 @@ namespace :db do
     puts "✅ Created migration: #{file}"
   end
 
-
   desc 'Open an interactive console with app context'
   task :console do
     require 'irb'
@@ -113,4 +112,10 @@ namespace :db do
 
   desc 'Setup: create, migrate'
   task setup: %i[create migrate]
+end
+
+desc "Run all tests"
+task :test do
+  require_relative "test/test_helper"
+  Dir.glob('test/**/*_test.rb').each { |file| require_relative file }
 end
