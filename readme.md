@@ -97,5 +97,32 @@ Gemfile                 # Gem dependencies
 - `/health` endpoint supports both browser and API clients.
 - Returns simple "ok" for non-JSON requests, detailed JSON for API clients.
 
-## License
-MIT
+## Liscense
+This application is Copyright © 2007 Techdots, inc.
+
+If you submit a Contribution to this application's source code, you hereby grant
+to Techdots, inc. a worldwide, royalty-free, exclusive, perpetual and
+irrevocable license, with the right to grant or transfer an unlimited number of
+non-exclusive licenses or sublicenses to third parties, under the Copyright
+covering the Contribution to use the Contribution by all means, including but
+not limited to:
+
+* to publish the Contribution,
+* to modify the Contribution, to prepare Derivative Works based upon or
+  containing the Contribution and to combine the Contribution with other
+  software code,
+* to reproduce the Contribution in original or modified form,
+* to distribute, to make the Contribution available to the public, display and
+  publicly perform the Contribution in original or modified form.
+
+# Credits
+
+Thank you to all [the contributors](https://github.com/techdots-dev/sinatra-api-boilerplate/contributors)!
+
+<!-- START /templates/footer.md -->
+## About Techdots
+
+![Techdots](https://cdn.prod.website-files.com/66e82263582d7179b492b717/66e82263582d7179b492b755_Logo.svg)
+
+This repo is maintained and funded by Techdots, inc.
+The names and logos for Techdots are trademarks of Techdots, inc.
