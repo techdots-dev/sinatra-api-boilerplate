@@ -17,7 +17,6 @@ gem "que"
 gem "mail"
 gem "ostruct"
 
-# added to the Gemfile
 group :production do
   gem "logger"
   gem "rollbar"
